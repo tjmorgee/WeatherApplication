@@ -7,4 +7,10 @@
     <string name="current_high">High 80\u00B0</string>
     <string name="current_humidity">Humidity 100%</string>
     <string name="current_pressure">Pressure 1023 hPa</string>
+    <string name="forecast">Forecast</string>
+    <string name="date">%d</string>
+    <string name="sunrise">%d</string>
+    <string name="sunset">%d</string>
+    <string name="humidity">%d</string>
+    <string name="pressure">%d</string>
 </resources>

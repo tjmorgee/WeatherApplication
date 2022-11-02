@@ -1,11 +1,30 @@
 package com.example.weatherapplication
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.weatherapplication.ui.CurrentConditions
+import com.example.weatherapplication.ui.ForecastScreen
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContent {
+            val navController = rememberNavController()
+            NavHost(navController, startDestination = "CurrentConditions") {
+                composable("CurrentConditions") {
+                    CurrentConditions {
+                        navController.navigate("Forecast")
+                    }
+                }
+
+                composable("Forecast") {
+                    ForecastScreen()
+                }
+            }
+        }
     }
 }

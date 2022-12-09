@@ -20,26 +20,33 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.weatherapplication.R
 import com.example.weatherapplication.models.CurrentConditions
+import com.example.weatherapplication.models.LatitudeLongitude
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CurrentConditions(
+    latitudeLongitude: LatitudeLongitude?,
     viewModel: CurrentConditionsViewModel = hiltViewModel(),
+    onGetWeatherForMyLocationClick: () -> Unit,
     onForecastButtonClick: () -> Unit,
 ) {
     val state by viewModel.currentConditions.collectAsState(null)
 
-    LaunchedEffect(Unit) {
-        viewModel.fetchData()
+    if (latitudeLongitude != null) {
+        LaunchedEffect(Unit) {
+            viewModel.fetchCurrentLocationData(latitudeLongitude)
+        }
+    } else {
+        LaunchedEffect(Unit) {
+            viewModel.fetchData()
+        }
     }
 
     Scaffold(
         topBar = { AppBar(title = stringResource(id = R.string.app_name, "Current Conditions")) },
     ) {
         state?.let {
-            CurrentConditionsContent(it) {
-                onForecastButtonClick()
-            }
+            CurrentConditionsContent(it, onGetWeatherForMyLocationClick, onForecastButtonClick)
         }
     }
 
@@ -48,6 +55,7 @@ fun CurrentConditions(
 @Composable
 private fun CurrentConditionsContent(
     currentConditions: CurrentConditions,
+    onGetWeatherForMyLocationClick: () -> Unit,
     onForecastButtonClick: () -> Unit,
 ) {
     Column(
@@ -57,7 +65,7 @@ private fun CurrentConditionsContent(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = stringResource(id = R.string.city),
+            text = stringResource(id = R.string.city, currentConditions.cityName),
             style = TextStyle(
                 fontWeight = FontWeight(600),
                 fontSize = 28.sp
@@ -111,6 +119,10 @@ private fun CurrentConditionsContent(
         Spacer(modifier = Modifier.height(96.dp))
         Button(onClick = onForecastButtonClick) {
             Text(text = stringResource(id = R.string.forecast))
+        }
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(onClick = onGetWeatherForMyLocationClick) {
+            Text(text = stringResource(id = R.string.get_weather_for_my_location))
         }
     }
 }
